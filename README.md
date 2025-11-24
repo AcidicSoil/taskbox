@@ -4,6 +4,8 @@
   </a>
 </p>
 
+[![Chromatic Deployment](https://github.com/AcidicSoil/taskbox/actions/workflows/chromatic.yml/badge.svg)](https://github.com/AcidicSoil/taskbox/actions/workflows/chromatic.yml)
+
 <h1 align="center">
   Chromatic's Intro to Storybook React template
 </h1>
