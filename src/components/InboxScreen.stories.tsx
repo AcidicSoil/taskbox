@@ -1,3 +1,4 @@
+// path: src/components/InboxScreen.stories.tsx
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { waitFor, waitForElementToBeRemoved } from "storybook/test";
