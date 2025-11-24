@@ -5,6 +5,7 @@
 </p>
 
 [![Chromatic Deployment](https://github.com/AcidicSoil/taskbox/actions/workflows/chromatic.yml/badge.svg?branch=main)](https://github.com/AcidicSoil/taskbox/actions/workflows/chromatic.yml)
+[![Codefetch Generation](https://github.com/AcidicSoil/taskbox/actions/workflows/codefetch.yml/badge.svg?branch=main&event=workflow_run)](https://github.com/AcidicSoil/taskbox/actions/workflows/codefetch.yml)
 
 <h1 align="center">
   Chromatic's Intro to Storybook React template

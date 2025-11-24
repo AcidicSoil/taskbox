@@ -1,4 +1,3 @@
-// path: src/components/InboxScreen.tsx
 import { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -14,7 +13,7 @@ export default function InboxScreen() {
   // The useEffect triggers the data fetching when the component is mounted
   useEffect(() => {
     dispatch(fetchTasks());
-  }, [dispatch]);
+  }, []);
 
   if (error) {
     return (

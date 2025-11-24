@@ -556,107 +556,109 @@ src/vite-env.d.ts
 
 src/components/InboxScreen.stories.tsx
 ```
-1 | import type { Meta, StoryObj } from "@storybook/react-vite";
-2 | 
-3 | import { waitFor, waitForElementToBeRemoved } from "storybook/test";
-4 | 
-5 | import { http, HttpResponse } from "msw";
-6 | 
-7 | import { MockedState } from "./TaskList.stories";
-8 | 
-9 | import { Provider } from "react-redux";
-10 | 
-11 | import InboxScreen from "./InboxScreen";
-12 | 
-13 | import store from "../lib/store";
-14 | 
-15 | const meta = {
-16 |   component: InboxScreen,
-17 |   title: "InboxScreen",
-18 |   decorators: [(story) => <Provider store={store}>{story()}</Provider>],
-19 |   tags: ["autodocs"],
-20 | } satisfies Meta<typeof InboxScreen>;
-21 | 
-22 | export default meta;
-23 | type Story = StoryObj<typeof meta>;
-24 | 
-25 | export const Default: Story = {
-26 |   parameters: {
-27 |     msw: {
-28 |       handlers: [
-29 |         http.get("https://jsonplaceholder.typicode.com/todos?userId=1", () => {
-30 |           return HttpResponse.json(MockedState.tasks);
-31 |         }),
-32 |       ],
-33 |     },
-34 |   },
-35 |   play: async ({ canvas, userEvent }) => {
-36 |     // Waits for the component to transition from the loading state
-37 |     await waitForElementToBeRemoved(await canvas.findByTestId("loading"));
-38 |     // Waits for the component to be updated based on the store
-39 |     await waitFor(async () => {
-40 |       // Simulates pinning the first task
-41 |       await userEvent.click(canvas.getByLabelText("pinTask-1"));
-42 |       // Simulates pinning the third task
-43 |       await userEvent.click(canvas.getByLabelText("pinTask-3"));
-44 |     });
-45 |   },
-46 | };
-47 | 
-48 | export const Error: Story = {
-49 |   parameters: {
-50 |     msw: {
-51 |       handlers: [
-52 |         http.get("https://jsonplaceholder.typicode.com/todos?userId=1", () => {
-53 |           return new HttpResponse(null, {
-54 |             status: 403,
-55 |           });
-56 |         }),
-57 |       ],
-58 |     },
-59 |   },
-60 | };
+1 | // path: src/components/InboxScreen.stories.tsx
+2 | import type { Meta, StoryObj } from "@storybook/react-vite";
+3 | 
+4 | import { waitFor, waitForElementToBeRemoved } from "storybook/test";
+5 | 
+6 | import { http, HttpResponse } from "msw";
+7 | 
+8 | import { MockedState } from "./TaskList.stories";
+9 | 
+10 | import { Provider } from "react-redux";
+11 | 
+12 | import InboxScreen from "./InboxScreen";
+13 | 
+14 | import store from "../lib/store";
+15 | 
+16 | const meta = {
+17 |   component: InboxScreen,
+18 |   title: "InboxScreen",
+19 |   decorators: [(story) => <Provider store={store}>{story()}</Provider>],
+20 |   tags: ["autodocs"],
+21 | } satisfies Meta<typeof InboxScreen>;
+22 | 
+23 | export default meta;
+24 | type Story = StoryObj<typeof meta>;
+25 | 
+26 | export const Default: Story = {
+27 |   parameters: {
+28 |     msw: {
+29 |       handlers: [
+30 |         http.get("https://jsonplaceholder.typicode.com/todos?userId=1", () => {
+31 |           return HttpResponse.json(MockedState.tasks);
+32 |         }),
+33 |       ],
+34 |     },
+35 |   },
+36 |   play: async ({ canvas, userEvent }) => {
+37 |     // Waits for the component to transition from the loading state
+38 |     await waitForElementToBeRemoved(await canvas.findByTestId("loading"));
+39 |     // Waits for the component to be updated based on the store
+40 |     await waitFor(async () => {
+41 |       // Simulates pinning the first task
+42 |       await userEvent.click(canvas.getByLabelText("pinTask-1"));
+43 |       // Simulates pinning the third task
+44 |       await userEvent.click(canvas.getByLabelText("pinTask-3"));
+45 |     });
+46 |   },
+47 | };
+48 | 
+49 | export const Error: Story = {
+50 |   parameters: {
+51 |     msw: {
+52 |       handlers: [
+53 |         http.get("https://jsonplaceholder.typicode.com/todos?userId=1", () => {
+54 |           return new HttpResponse(null, {
+55 |             status: 403,
+56 |           });
+57 |         }),
+58 |       ],
+59 |     },
+60 |   },
+61 | };
 ```
 
 src/components/InboxScreen.tsx
 ```
-1 | import { useEffect } from "react";
-2 | 
-3 | import { useDispatch, useSelector } from "react-redux";
-4 | 
-5 | import { AppDispatch, fetchTasks, RootState } from "../lib/store";
-6 | 
-7 | import TaskList from "./TaskList";
-8 | 
-9 | export default function InboxScreen() {
-10 |   const dispatch = useDispatch<AppDispatch>();
-11 |   // We're retrieving the error field from our updated store
-12 |   const { error } = useSelector((state: RootState) => state.taskbox);
-13 |   // The useEffect triggers the data fetching when the component is mounted
-14 |   useEffect(() => {
-15 |     dispatch(fetchTasks());
-16 |   }, []);
-17 | 
-18 |   if (error) {
-19 |     return (
-20 |       <div className="page lists-show">
-21 |         <div className="wrapper-message">
-22 |           <span className="icon-face-sad" />
-23 |           <p className="title-message">Oh no!</p>
-24 |           <p className="subtitle-message">Something went wrong</p>
-25 |         </div>
-26 |       </div>
-27 |     );
-28 |   }
-29 |   return (
-30 |     <div className="page lists-show">
-31 |       <nav>
-32 |         <h1 className="title-page">Taskbox</h1>
-33 |       </nav>
-34 |       <TaskList />
-35 |     </div>
-36 |   );
-37 | }
+1 | // path: src/components/InboxScreen.tsx
+2 | import { useEffect } from "react";
+3 | 
+4 | import { useDispatch, useSelector } from "react-redux";
+5 | 
+6 | import { AppDispatch, fetchTasks, RootState } from "../lib/store";
+7 | 
+8 | import TaskList from "./TaskList";
+9 | 
+10 | export default function InboxScreen() {
+11 |   const dispatch = useDispatch<AppDispatch>();
+12 |   // We're retrieving the error field from our updated store
+13 |   const { error } = useSelector((state: RootState) => state.taskbox);
+14 |   // The useEffect triggers the data fetching when the component is mounted
+15 |   useEffect(() => {
+16 |     dispatch(fetchTasks());
+17 |   }, [dispatch]);
+18 | 
+19 |   if (error) {
+20 |     return (
+21 |       <div className="page lists-show">
+22 |         <div className="wrapper-message">
+23 |           <span className="icon-face-sad" />
+24 |           <p className="title-message">Oh no!</p>
+25 |           <p className="subtitle-message">Something went wrong</p>
+26 |         </div>
+27 |       </div>
+28 |     );
+29 |   }
+30 |   return (
+31 |     <div className="page lists-show">
+32 |       <nav>
+33 |         <h1 className="title-page">Taskbox</h1>
+34 |       </nav>
+35 |       <TaskList />
+36 |     </div>
+37 |   );
+38 | }
 ```
 
 src/components/Task.stories.tsx
